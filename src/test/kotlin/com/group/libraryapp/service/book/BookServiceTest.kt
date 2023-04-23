@@ -36,7 +36,7 @@ class BookServiceTest @Autowired constructor(
     fun saveBookTest() {
         // given
         val bookName = "이상한 나라의 엘리스"
-        val request = BookRequest(bookName)
+        val request = BookRequest(bookName, "COMPUTER")
 
         // when
         bookService.saveBook(request)
@@ -45,6 +45,7 @@ class BookServiceTest @Autowired constructor(
         val books = bookRepository.findAll()
         assertThat(books).hasSize(1)
         assertThat(books[0].name).isEqualTo(bookName)
+        assertThat(books[0].type).isEqualTo("COMPUTER")
     }
 
     @DisplayName("책 대출이 정상 동작한다.")
@@ -52,7 +53,7 @@ class BookServiceTest @Autowired constructor(
     fun loanBookTest() {
         // given
         val bookName = "클린 코드"
-        bookRepository.save(Book(bookName))
+        bookRepository.save(Book.fixture(bookName))
         val savedUser = userRepository.save(User("Solar", null))
         val request = BookLoanRequest("Solar", bookName)
 
@@ -72,7 +73,7 @@ class BookServiceTest @Autowired constructor(
     fun loanBookFailTest() {
         // given
         val bookName = "클린 코드"
-        bookRepository.save(Book(bookName))
+        bookRepository.save(Book.fixture(bookName))
         val savedUser = userRepository.save(User("Solar", null))
         userLoanHistoryRepository.save(UserLoanHistory(savedUser, bookName, false))
         val request = BookLoanRequest("Solar", bookName)
@@ -90,7 +91,7 @@ class BookServiceTest @Autowired constructor(
     fun returnBookTest() {
         // given
         val bookName = "클린 코드"
-        bookRepository.save(Book(bookName))
+        bookRepository.save(Book.fixture(bookName))
         val savedUser = userRepository.save(User("Solar", null))
         userLoanHistoryRepository.save(UserLoanHistory(savedUser, bookName, false))
         val request = BookReturnRequest("Solar", bookName)
