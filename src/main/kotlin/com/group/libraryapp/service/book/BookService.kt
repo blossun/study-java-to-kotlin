@@ -54,14 +54,6 @@ class BookService(
         for (book in books) {
             results.firstOrNull { dto -> book.type == dto.type }?.plusOne()
                 ?: results.add(BookStatResponse(book.type, 1))
-
-            // 위 코드 2줄과 동일한 내용
-//            val targetDto = results.firstOrNull { dto -> book.type == dto.type }
-//            if (targetDto == null) {
-//                results.add(BookStatResponse(book.type, 1))
-//            } else {
-//                targetDto.plusOne()
-//            }
         }
         return results
     }
